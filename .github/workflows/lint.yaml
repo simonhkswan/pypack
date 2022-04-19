@@ -39,19 +39,10 @@ jobs:
         run: echo "PLATFORM=$(echo ${{ runner.os }}-${{ runner.arch }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
         shell: bash
 
-      - name: annotate
-        run: echo "::error file=requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt::Requirement changed"
-
       - name: pip-compile
         if: ${{ !env.ACT }}
         run: |
           pip install pip-tools
           pip-compile --no-annotate --no-header --output-file requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt
           git add requirements
-          git diff --cached --exit-code -- requirements
-
-      - name: annotate
-        if: ${{ failure() }}
-        run: |
-          echo "::error file=requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt,line=1,col=1::Requirement changed"
-        shell: bash
+          git diff --cached --exit-code -- requirements || echo "::error file=requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt::Requirement changed"
