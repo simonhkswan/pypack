@@ -1,0 +1,93 @@
+---
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-wheels:
+    name: Build Python ${{ format('3.{0}', matrix.pyv) }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        pyv:
+          - 7
+          - 8
+          - 9
+        os:
+          - 'ubuntu-latest'
+          - 'windows-latest'
+          - 'macos-latest'
+
+    steps:
+      - uses: actions/checkout@v3
+        if: ${{ !env.ACT }}
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ format('3.{0}', matrix.pyv) }}
+          architecture: 'x64'
+          cache: 'pip'
+          cache-dependency-path: 'pyproject.toml'
+
+      - name: install pipx
+        run: |
+          pip install pipx
+
+      - name: pre-commit
+        if: ${{ !env.ACT }}
+        run: |
+          pip install pre-commit
+          pre-commit run pip-compile
+
+      - name: set platform variable
+        run: echo "PLATFORM=$(echo $RUNNER_OS | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        shell: bash
+        env:
+          RUNNER_OS: ${{ runner.os }}
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.0.1
+        env:
+          CIBW_BUILD: "${{ format('cp3{0}-*', matrix.pyv) }}"
+          CIBW_PLATFORM: "${{ env.PLATFORM }}"
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2.2.4
+        if: ${{ !env.ACT }}
+        with:
+          path: ./wheelhouse/*.whl
+
+  # deploy-docs:
+  #   name: deploy-docs
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       if: ${{ !env.ACT }}
+
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: 3.8
+  #         architecture: 'x64'
+  #         cache: 'pip'
+  #         cache-dependency-path: 'pyproject.toml'
+
+  #     - name: pre-commit
+  #       if: ${{ !env.ACT }}
+  #       run: |
+  #         pip install pre-commit --cache-dir .pip-cache
+  #         pre-commit run pip-compile
+
+  #     - name: Install package & docs requirements
+  #       run: |
+  #         python -m venv .denv
+  #         source .denv/bin/activate
+  #         pip install -U pip setuptools wheel
+  #         pip install .[dev] --cache-dir .pip-cache
+
+  #     - name: Build HTML
+  #       run: |
+  #         source .denv/bin/activate
+  #         cd docs
+  #         make html
+...

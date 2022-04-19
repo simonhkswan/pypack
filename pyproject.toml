@@ -1,0 +1,126 @@
+[build-system]
+requires = [
+    "setuptools>=61",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pypack"
+description = "An example python package"
+readme = "README.md"
+requires-python = ">= 3.7"
+authors = [
+  { name = "Simon Swan", email = "shk.swan@gmail.com" },
+]
+keywords = [
+  "template",
+  "packaging",
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Developers",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX",
+  "Operating System :: Unix",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dynamic = ["version"]
+
+dependencies = [
+  "numpy>=1.19",
+  "pandas>=1.2",
+  "scikit_learn>=0.23;python_version<'3.8'",
+]
+
+  [project.optional-dependencies]
+  dev = [
+    "pytest",
+    "pre-commit",
+  ]
+
+  [project.license]
+  file = "LICENSE.md"
+
+  [project.urls]
+  homepage = "https://github.com/simonhkswan/pypack"
+  repository = "https://github.com/simonhkswan/pypack"
+
+[tool]
+  [tool.setuptools]
+  platforms = [
+    "MacOS",
+    "Windows",
+    "Linux",
+  ]
+  zip-safe = false
+
+    [tool.setuptools.dynamic]
+    version = {attr = "pypack.__version__"}
+
+    [tool.setuptools.packages.find]
+    where = ["src"]
+    include = ["pypack*"]
+    exclude = ["tests*"]
+
+  [tool.black]
+  line-length = 100
+
+  [tool.pytest.ini_options]
+  addopts = "--strict-markers"
+  markers = [
+      "slow"
+  ]
+  junit_suite_name = "unit"
+  junit_logging = "all"
+  junit_log_passing_tests = true
+  junit_duration_report = "call"
+  junit_family = "xunit1"
+  log_level = "INFO"
+
+  [tool.cibuildwheel]
+  archs = ["auto64"]
+  build-frontend = "pip"
+  dependency-versions = "pinned"
+  environment = {}
+  build-verbosity = ""
+
+  before-all = ""
+  before-build = ""
+  repair-wheel-command = ""
+
+  test-command = "pytest {project}/tests"
+  before-test = ""
+  test-requires = []
+  test-extras = ["dev"]
+
+  manylinux-x86_64-image = "manylinux2014"
+  manylinux-i686-image = "manylinux2010"
+  manylinux-aarch64-image = "manylinux2014"
+  manylinux-ppc64le-image = "manylinux2014"
+  manylinux-s390x-image = "manylinux2014"
+  manylinux-pypy_x86_64-image = "manylinux2010"
+  manylinux-pypy_i686-image = "manylinux2010"
+  manylinux-pypy_aarch64-image = "manylinux2014"
+
+    [tool.cibuildwheel.linux]
+    before-build = "yum install -y zip"
+    repair-wheel-command = [
+        "auditwheel repair -w {dest_dir} {wheel}",
+    ]
+
+    [tool.cibuildwheel.macos]
+    repair-wheel-command = [
+        "delocate-listdeps {wheel} && delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel}",
+    ]
+
+    [tool.cibuildwheel.windows]
+    repair-wheel-command = []
