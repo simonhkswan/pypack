@@ -44,4 +44,4 @@ jobs:
           pip install pip-tools
           pip-compile --no-annotate --no-header --output-file requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt
           git add requirements
-          git diff --exit-code -- requirements/*
+          git diff --cached --exit-code -- requirements
