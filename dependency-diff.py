@@ -53,23 +53,11 @@ if __name__ == "__main__":
         if pkg not in new_vers:
             removed.append(pkg)
         elif old_vers[pkg] != new_vers[pkg]:
-            print(pkg, old_vers[pkg], repr(old_vers[pkg]), new_vers[pkg], repr(new_vers[pkg]))
             updated.append(pkg)
     for pkg in new_vers:
         if pkg not in old_vers:
             added.append(pkg)
 
-    print(old_deps)
-    print(repr(old_deps))
-    print(old_vers, old_lines)
-    print("---")
-    print(new_deps)
-    print(repr(new_deps))
-    print(old_vers, old_lines)
-    print("---")
-    print(removed)
-    print(added)
-    print(updated)
     for pkg in updated:
         file = file_path.as_posix()
         title = "Update Requirement"
