@@ -8,13 +8,6 @@ repos:
       - id: trailing-whitespace
       - id: mixed-line-ending
 
-  - repo: https://github.com/jazzband/pip-tools
-    rev: 6.6.0
-    hooks:
-      - id: pip-compile
-        args: ['--no-annotate', '--no-header']
-        always_run: true
-
   - repo: https://github.com/pycqa/isort
     rev: 5.10.1
     hooks:

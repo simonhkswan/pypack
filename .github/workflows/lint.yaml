@@ -33,13 +33,14 @@ jobs:
           architecture: 'x64'
           cache: 'pip'
           cache-dependency-path: 'pyproject.toml'
+      
+      - name: set platform variable
+        run: echo "PLATFORM=$(echo ${{ runner.os }}-${{ runner.arch }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        shell: bash
 
-      - name: install pipx
-        run: |
-          pip install pipx
-
-      - name: pre-commit
+      - name: pip-compile
         if: ${{ !env.ACT }}
         run: |
-          pip install pre-commit
-          pre-commit run pip-compile
+          pip install pip-tools
+          pip-compile --no-annotate --no-header --output-file requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt
+          git diff --exit-code -- requirements
