@@ -14,7 +14,7 @@ def subprocess_command(cmd: List[str]):
 
 
 def deps_to_dicts(deps):
-    pairs = [dep.split("==") for n, dep in enumerate(deps.split("\n"))]
+    pairs = [dep.strip().split("==") for n, dep in enumerate(deps.split("\n"))]
     pairs = [p for p in pairs if len(p) == 2]
     version_dict = {name: ver for name, ver in pairs}
     line_no = {name: n for n, (name, ver) in enumerate(pairs)}
