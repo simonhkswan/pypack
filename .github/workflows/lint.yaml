@@ -50,5 +50,5 @@ jobs:
       - name: annotate
         if: ${{ failure() }}
         run: |
-          echo "error:: file=requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt,title=Requirement Changed::Update needed"
+          echo "error:: file=requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt,line=1,col=1,endColumn=1::Requirement changed"
         shell: bash
