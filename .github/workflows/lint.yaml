@@ -13,6 +13,7 @@ jobs:
     name: Build Python ${{ format('3.{0}', matrix.pyv) }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         pyv:
           - 7
