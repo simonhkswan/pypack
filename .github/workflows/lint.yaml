@@ -45,8 +45,10 @@ jobs:
           pip install pip-tools
           pip-compile --no-annotate --no-header --output-file requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt
           git add requirements
-          IFS=$'\n'
-          for LINE in $(git blame -s requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt | sed  -lnE 's#^00000000 requirements/(.+).txt ([0-9]+).*#::error file=requirements/\1.txt,line=\2,endLine=\2,title=Requirement Changed::Update needed#ip')
-          do echo $LINE
-          done
           git diff --cached --exit-code -- requirements
+
+      - name: annotate
+        if: ${{ failure() }}
+        run: |
+          echo "error:: file=requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt,title=Requirement Changed::Update needed"
+        shell: bash
