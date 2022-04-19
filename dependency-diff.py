@@ -105,7 +105,7 @@ if __name__ == "__main__":
             endcol=endcol,
         )
 
-    for pkg in removed:
+    for pkg in added:
         file = file_path.as_posix()
         title = "Add Requirement"
         message = f"Dependency `{pkg}=={new_vers[pkg]}` should be added to requirements."
