@@ -72,12 +72,47 @@ if __name__ == "__main__":
     print(updated)
     for pkg in updated:
         file = file_path.as_posix()
-        title = "Updated Requirement"
+        title = "Update Requirement"
         message = f"Dependency `{pkg}` should be updated from {old_vers[pkg]} to {new_vers[pkg]}."
         line = old_lines[pkg] + 1
         endline = line
         col = len(pkg) + 3
         endcol = col + len(old_vers[pkg])
+        gh_action_warning(
+            file=file,
+            title=title,
+            message=message,
+            line=line,
+            endline=endline,
+            col=col,
+            endcol=endcol,
+        )
+    for pkg in removed:
+        file = file_path.as_posix()
+        title = "Remove Requirement"
+        message = f"Dependency `{pkg}` should be removed from requirements."
+        line = old_lines[pkg] + 1
+        endline = line
+        col = 1
+        endcol = len(pkg) + 3 + len(old_vers[pkg])
+        gh_action_warning(
+            file=file,
+            title=title,
+            message=message,
+            line=line,
+            endline=endline,
+            col=col,
+            endcol=endcol,
+        )
+
+    for pkg in removed:
+        file = file_path.as_posix()
+        title = "Add Requirement"
+        message = f"Dependency `{pkg}=={new_vers[pkg]}` should be added to requirements."
+        line = 1
+        endline = line
+        col = 1
+        endcol = 1
         gh_action_warning(
             file=file,
             title=title,
