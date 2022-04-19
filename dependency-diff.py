@@ -60,9 +60,11 @@ if __name__ == "__main__":
             added.append(pkg)
 
     print(old_deps)
+    print(repr(old_deps))
     print(old_vers, old_lines)
     print("---")
     print(new_deps)
+    print(repr(new_deps))
     print(old_vers, old_lines)
     print("---")
     print(removed)
