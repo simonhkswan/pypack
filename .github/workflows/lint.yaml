@@ -43,6 +43,6 @@ jobs:
         if: ${{ !env.ACT }}
         run: |
           pip install pip-tools
-          pip-compile --no-annotate --no-header --output-file requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt
+          pip-compile --no-annotate --no-header --output-file requirements/${{ env.PLATFORM }}-py3${{ matrix.pyv }}-requirements.txt
           git add requirements
-          python dependency-diff.py requirements/${PLATFORM}-py3${{ matrix.pyv }}-requirements.txt
+          python dependency-diff.py requirements/${{ env.PLATFORM }}-py3${{ matrix.pyv }}-requirements.txt
