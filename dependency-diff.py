@@ -58,6 +58,8 @@ if __name__ == "__main__":
         if pkg not in old_vers:
             added.append(pkg)
 
+    print(old_deps)
+    print(new_deps)
     print(removed)
     print(added)
     print(updated)
