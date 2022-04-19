@@ -53,6 +53,7 @@ if __name__ == "__main__":
         if pkg not in new_vers:
             removed.append(pkg)
         elif old_vers[pkg] != new_vers[pkg]:
+            print(pkg, old_vers[pkg], type(old_vers[pkg]), new_vers[pkg], type(new_vers[pkg]))
             updated.append(pkg)
     for pkg in new_vers:
         if pkg not in old_vers:
@@ -71,7 +72,7 @@ if __name__ == "__main__":
         file = file_path.as_posix()
         title = "Updated Requirement"
         message = f"Dependency `{pkg}` should be updated from {old_vers[pkg]} to {new_vers[pkg]}."
-        line = old_lines[pkg]
+        line = old_lines[pkg] + 1
         endline = line
         col = len(pkg) + 3
         endcol = col + len(old_vers[pkg])
